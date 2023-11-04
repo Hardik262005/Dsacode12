@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *left, *right;
+};
+
+struct Node* insert(struct Node* root, int key) {
+    if (root == NULL) {
+        struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+        temp->data = key;
+        temp->left = temp->right = NULL;
+        return temp;
+    }
+
+    if (key < root->data)
+        root->left = insert(root->left, key);
+    else if (key > root->data)
+        root->right = insert(root->right, key);
+
+    return root;
+}
+
+void preOrderTraversal(struct Node* root) {
+    if (root != NULL) {
+        printf("%d ", root->data);
+        preOrderTraversal(root->left);
+        preOrderTraversal(root->right);
+    }
+}
+
+void inOrderTraversal(struct Node* root) {
+    if (root != NULL) {
+        inOrderTraversal(root->left);
+        printf("%d ", root->data);
+        inOrderTraversal(root->right);
+    }
+}
+
+void postOrderTraversal(struct Node* root) {
+    if (root != NULL) {
+        postOrderTraversal(root->left);
+        postOrderTraversal(root->right);
+        printf("%d ", root->data);
+    }
+}
+
+int main() {
+    struct Node* root = NULL;
+    int n, value;
+
+    printf("Enter the number of elements: ");
+    scanf("%d", &n);
+
+    printf("Enter the elements: ");
+    for (int i = 0; i < n; ++i) {
+        scanf("%d", &value);
+        root = insert(root, value);
+    }
+
+    printf("Pre-order traversal: ");
+    preOrderTraversal(root);
+
+    printf("\nIn-order traversal: ");
+    inOrderTraversal(root);
+
+    printf("\nPost-order traversal: ");
+    postOrderTraversal(root);
+
+    return 0;
+}

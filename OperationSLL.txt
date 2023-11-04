@@ -1,0 +1,43 @@
+print_from_end( head->next );
+    printf("%d  ", head->data);
+}
+ 
+/* 
+* Returns the size of the list
+*/
+int size_of_list()
+{
+    struct node* temp = head;
+    int count = 0;
+ 
+    while(temp != NULL)
+    {
+        count += 1;
+        temp = temp->next;
+    }
+    return count;
+}
+ 
+/* 
+* Getting node data from the user
+*/
+int getData()
+{
+    int data;
+    printf("\n\nEnter Data: ");
+    scanf("%d", &data);
+ 
+    return data;
+}
+ 
+/* 
+* Getting the position of the node from the user
+*/
+int getPosition()
+{
+    int pos;
+ printf("\nEnter Position: ");
+    scanf("%d", &pos);
+ 
+    return pos;
+}

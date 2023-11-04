@@ -1,0 +1,100 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_NODES 100
+
+// Queue structure for BFS
+struct Queue {
+    int front, rear, size;
+    unsigned capacity;
+    int* array;
+};
+
+// Function to create a new queue
+struct Queue* createQueue(unsigned capacity) {
+    struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
+    queue->capacity = capacity;
+    queue->front = queue->size = 0;
+    queue->rear = capacity - 1;
+    queue->array = (int*)malloc(queue->capacity * sizeof(int));
+    return queue;
+}
+
+// Function to check if the queue is full
+int isFull(struct Queue* queue) {
+    return (queue->size == queue->capacity);
+}
+
+// Function to check if the queue is empty
+int isEmpty(struct Queue* queue) {
+    return (queue->size == 0);
+}
+
+// Function to enqueue a node to the queue
+void enqueue(struct Queue* queue, int item) {
+    if (isFull(queue))
+        return;
+    queue->rear = (queue->rear + 1) % queue->capacity;
+    queue->array[queue->rear] = item;
+    queue->size = queue->size + 1;
+}
+
+// Function to dequeue a node from the queue
+int dequeue(struct Queue* queue) {
+    if (isEmpty(queue))
+        return -1;
+    int item = queue->array[queue->front];
+    queue->front = (queue->front + 1) % queue->capacity;
+    queue->size = queue->size - 1;
+    return item;
+}
+
+// Function to perform BFS traversal on the graph
+void BFS(int graph[MAX_NODES][MAX_NODES], int start, int nodes) {
+    struct Queue* queue = createQueue(MAX_NODES);
+    int visited[MAX_NODES] = {0};
+
+    printf("BFS Traversal starting from node %d: ", start);
+
+    visited[start] = 1;
+    enqueue(queue, start);
+
+    while (!isEmpty(queue)) {
+        int currentNode = dequeue(queue);
+        printf("%d ", currentNode);
+
+        for (int i = 0; i < nodes; ++i) {
+            if (graph[currentNode][i] && !visited[i]) {
+                visited[i] = 1;
+                enqueue(queue, i);
+            }
+        }
+    }
+
+    free(queue->array);
+    free(queue);
+}
+
+int main() {
+    int nodes, edges;
+    printf("Enter the number of nodes and edges: ");
+    scanf("%d %d", &nodes, &edges);
+
+    int graph[MAX_NODES][MAX_NODES] = {0};
+
+    printf("Enter the edges (node1 node2):\n");
+    for (int i = 0; i < edges; ++i) {
+        int node1, node2;
+        scanf("%d %d", &node1, &node2);
+        graph[node1][node2] = 1;
+        graph[node2][node1] = 1;  // Assuming an undirected graph
+    }
+
+    int startNode;
+    printf("Enter the starting node for BFS traversal: ");
+    scanf("%d", &startNode);
+
+    BFS(graph, startNode, nodes);
+
+    return 0;
+}
